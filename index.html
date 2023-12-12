@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>TODO with Local Storage </title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Link CSS Bootstrap 5.3.0 -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+        <!-- Link CSS My Style -->
+        <link href="css/styles.css" rel="stylesheet">
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+        <!-- BOXICONS USAGE -->
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    </head>
+    <body>        
+        <div class="container">
+            <!-- BUTTON SCROLL TO TOP  -->
+            <button onclick="scrollToTop()" id="scrollToTopBtn">
+                &#129145;                
+            </button>
+
+            <h2 class="mt-5 mb-5 text-center">TO DO Buku Bacaan | Tugas Akhir</h2>
+            <div class="mb-5">
+                <div class="row">                    
+                    <div class="form-group col-md-12 mb-3">
+                        <label for="title">Judul</label>
+                        <input name="title" type="text" class="form-control" id="title" placeholder="Masukkan Judul Buku"/>
+                    </div>
+                    <div class="form-group col-md-12 mb-3">
+                        <label for="author">Penulis</label>
+                        <input name="author" type="text" class="form-control" id="author" placeholder="Masukkan Nama Penulis"/>
+                    </div>
+                    <div class="form-group col-md-12 mb-3">
+                        <label for="year">Tahun</label>
+                        <input name="year" type="number" class="form-control" id="year" placeholder="Masukkan Tahun"/>
+                    </div>
+                    <div class="col-lg-6 mt-5">
+                        <button class="btn btn-success" id="submit" onclick="AddData()">Tambah Data</button>                    
+                        <button class="btn btn-primary" id="update">Update</button>                        
+                    </div>
+                    <div class="togel col-lg-6 mt-5">                        
+                        <button class="btn btn-primary" id="toggle" >Dark Mode</button>                        
+                    </div>
+                </div>
+            </div>
+            <hr>
+
+            <div class="row mt-5">
+                <h2 class="mt-5 mb-5 text-center">Buku Belum Dibaca</h2>
+                <div class="col-12">
+                    <table class="table table-bordered" id="yetTable">
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Penulis</th>
+                                <th>Tahun</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+            </div>
+            <hr>
+
+            <div class="row mt-5">
+                <h2 class="mt-5 mb-5 text-center">Buku Selesai Dibaca</h2>
+                <div class="col-12">
+                    <table class="table table-bordered" id="readTable">
+                        <thead>
+                            <tr>                                
+                                <th>Judul</th>
+                                <th>Penulis</th>
+                                <th>Tahun</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <script src="js/script.js" />
+    </body>
+</html>

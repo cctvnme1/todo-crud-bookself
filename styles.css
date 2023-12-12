@@ -1,0 +1,50 @@
+body {
+    font-family: 'Titillium Web', sans-serif;
+}
+
+.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+#update {
+    display: none;
+}
+
+h2 {
+    font-weight: 700;
+}
+
+.btn {
+    border-radius: 2px 10px;
+    font-size: 1em;
+    font-weight: 600;   
+}
+.togel {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* SCROLL TO TOP BUTTON */
+#scrollToTopBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 99;
+    padding: 10px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 25px;
+    background-color: #fff;
+}
+
+#scrollToTopBtn p {
+    font-size: 12px;
+}
+
+#scrollToTopBtn:hover {
+    background-color: chartreuse;
+    transition: 1s;
+}
