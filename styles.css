@@ -23,6 +23,8 @@ h2 {
 .togel {
     display: flex;
     justify-content: flex-end;
+    gap: 30px;
+    flex-direction: row;        
 }
 
 /* SCROLL TO TOP BUTTON */
