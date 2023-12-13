@@ -88,7 +88,10 @@ function showData() {
         html += '<td>' + element.title + '</td>';
         html += '<td>' + element.author + '</td>';
         html += '<td>' + element.year + '</td>';        
-        html += '<td><button onclick="deleteData(' + index +')" class="badge text-bg-danger">Remove</button><button onclick="updateData(' + index +')" class="badge text-bg-warning m-2">Edit</button><button onclick="moveToCompleted(' + index +')" class="badge text-bg-info m-2">Finish</button></td>'
+        html += '<td><button onclick="deleteData(' + index +')" class="badge text-bg-danger">Remove</button>';
+        html += '<button onclick="updateData(' + index +')" class="badge text-bg-warning m-2">Edit</button>';
+        html += '<button onclick="finishBook(' + index +')" class="badge text-bg-info m-2">Finish</button></td>';
+
         html += '</tr>';
     });
 
@@ -96,40 +99,73 @@ function showData() {
 }
 
 
-function AddData() {    
-    if(validateForm() == true){
+function AddData() {
+    if (validateForm() == true) {
         var title = document.getElementById('title').value;
         var author = document.getElementById('author').value;
         var year = document.getElementById('year').value;
-        
-        
+        var isComplete = document.getElementById('inputBookIsComplete').checked;
+
         function generateId() {
             return +new Date();
-        }        
+        }
 
         var mybooksList;
-        if(localStorage.getItem('mybooksList') == null) {
-            mybooksList = [];            
+        if (localStorage.getItem('mybooksList') == null) {
+            mybooksList = [];
         } else {
             mybooksList = JSON.parse(localStorage.getItem('mybooksList'));
         }
 
-        mybooksList.push({
-            id : generateId(),
-            title : title,
+        var book = {
+            id: generateId(),
+            title: title,
             author: author,
             year: Number(year),
-            isComplete: false,            
-        });        
+            isComplete: isComplete,
+        };
+
+        mybooksList.push(book);
 
         localStorage.setItem('mybooksList', JSON.stringify(mybooksList));
+
         showData();
+
+        if (isComplete) {
+            moveToCompleted(book.id);
+        }
+
         alert("Buku Siap Ditambahkan!");
         document.getElementById('title').value = '';
         document.getElementById('author').value = '';
-        document.getElementById('year').value = '';        
+        document.getElementById('year').value = '';
+        document.getElementById('inputBookIsComplete').checked = false;
     }
 }
+
+function finishBook(index) {
+    var mybooksList = JSON.parse(localStorage.getItem('mybooksList'));
+
+    if (index >= 0 && index < mybooksList.length) {
+        var movedBook = mybooksList[index];
+        mybooksList.splice(index, 1);
+
+        var completedBooksList;
+        if (localStorage.getItem('completedBooksList') == null) {
+            completedBooksList = [];
+        } else {
+            completedBooksList = JSON.parse(localStorage.getItem('completedBooksList'));
+        }
+
+        completedBooksList.push(movedBook);
+        localStorage.setItem('completedBooksList', JSON.stringify(completedBooksList));
+        localStorage.setItem('mybooksList', JSON.stringify(mybooksList));
+
+        showData();
+        showCompletedData();
+    }
+}
+
 
 function deleteData(index){      
     var mybooksList;
@@ -189,27 +225,27 @@ function updateData(index){
 
 }
 
-function moveToCompleted(index) {
-    var mybooksList = JSON.parse(localStorage.getItem('mybooksList'));    
-    
-    var movedBook = mybooksList[index];
-    mybooksList.splice(index, 1);    
-    movedBook.isComplete = true;
+function moveToCompleted(id) {
+    var mybooksList = JSON.parse(localStorage.getItem('mybooksList'));
+
+    var movedBook = mybooksList.find(book => book.id == id);
+    mybooksList = mybooksList.filter(book => book.id != id);
 
     var completedBooksList;
-    if(localStorage.getItem('completedBooksList') == null) {
+    if (localStorage.getItem('completedBooksList') == null) {
         completedBooksList = [];
     } else {
         completedBooksList = JSON.parse(localStorage.getItem('completedBooksList'));
     }
 
-    completedBooksList.push(movedBook);
-    localStorage.setItem('completedBooksList', JSON.stringify(completedBooksList));   
-    localStorage.setItem('mybooksList', JSON.stringify(mybooksList));
+    if (movedBook && movedBook.title) { // Perbarui di sini
+        completedBooksList.push(movedBook);
+        localStorage.setItem('completedBooksList', JSON.stringify(completedBooksList));
+        localStorage.setItem('mybooksList', JSON.stringify(mybooksList));
 
-    
-    showData();
-    showCompletedData();
+        showData();
+        showCompletedData();
+    }
 }
 
 
@@ -236,22 +272,13 @@ function deleteCompletedData(id) {
 
 
 function moveToUncompleted(id) {
-    var completedBooksList;
-    if(localStorage.getItem('completedBooksList') == null) {
-        completedBooksList = [];
-    } else {
-        completedBooksList = JSON.parse(localStorage.getItem('completedBooksList'));
-    }
+    var completedBooksList = JSON.parse(localStorage.getItem('completedBooksList'));
 
-    var index = completedBooksList.findIndex(function (book) {
-        return book.id == id;
-    });
-
-    var movedBook = completedBooksList[index];
-    completedBooksList.splice(index, 1);
+    var movedBook = completedBooksList.find(book => book.id == id);
+    completedBooksList = completedBooksList.filter(book => book.id != id);
 
     var mybooksList;
-    if(localStorage.getItem('mybooksList') == null) {
+    if (localStorage.getItem('mybooksList') == null) {
         mybooksList = [];
     } else {
         mybooksList = JSON.parse(localStorage.getItem('mybooksList'));
@@ -267,6 +294,7 @@ function moveToUncompleted(id) {
     showCompletedData();
 }
 
+
 function showCompletedData() {
     var completedBooksList;
     if(localStorage.getItem('completedBooksList') == null) {
@@ -278,26 +306,23 @@ function showCompletedData() {
     var html = '';
 
     completedBooksList.forEach(function(element) {
-        html += '<tr>';
-        html += '<td>' + element.title + '</td>';
-        html += '<td>' + element.author + '</td>';
-        html += '<td>' + element.year + '</td>';
-        html += '<td><button onclick="deleteCompletedData(\'' + element.id + '\')" class="badge text-bg-danger">Remove</button>';
-        html += '<button onclick="moveToUncompleted(\'' + element.id + '\')" class="badge text-bg-info m-2">Kembali</button></td>';
+        if (element.title) { // Perbarui di sini
+            html += '<tr>';
+            html += '<td>' + element.title + '</td>';
+            html += '<td>' + element.author + '</td>';
+            html += '<td>' + element.year + '</td>';
+            html += '<td><button onclick="deleteCompletedData(\'' + element.id + '\')" class="badge text-bg-danger">Remove</button>';
+            html += '<button onclick="moveToUncompleted(\'' + element.id + '\')" class="badge text-bg-info m-2">Kembali</button></td>';
 
-        html += '</tr>';
+            html += '</tr>';
+        }
     });
 
     document.querySelector('#readTable tbody').innerHTML = html;
 }
 
+
 document.addEventListener('DOMContentLoaded', function() {
     showData();
     showCompletedData();
 });
-
-
-
-
-
-
